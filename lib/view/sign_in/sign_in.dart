@@ -1,3 +1,6 @@
+import 'dart:ui' as ui;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_home/view/sign_in/forget_password.dart';
@@ -18,10 +21,11 @@ class _SignInState extends State<SignIn> {
     super.initState();
   }
 
+  ImageProvider bgimg = const AssetImage("assets/images/icon.png");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
       body: Consumer<SignInModel>(
         builder: (context, model, _) => SingleChildScrollView(
             child: ConstrainedBox(
@@ -29,13 +33,37 @@ class _SignInState extends State<SignIn> {
               BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Stack(
             children: [
-              Opacity(
-                  opacity: model.isLoading ? 0.4 : 1,
-                  child: AbsorbPointer(
-                      absorbing: model.isLoading,
-                      child: SafeArea(
-                        child: Padding(
-                            padding: const EdgeInsets.all(25.0),
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                  // filterQuality: FilterQuality.high,
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1523755231516-e43fd2e8dca5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80"),
+                  fit: BoxFit.cover,
+                )),
+              ),
+              Container(
+                width: 350,
+                height: 200,
+                decoration: BoxDecoration(image: DecorationImage(image: bgimg)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 130),
+                child: Opacity(
+                    opacity: model.isLoading ? 0.4 : 1,
+                    child: AbsorbPointer(
+                        absorbing: model.isLoading,
+                        child: SafeArea(
+                          // padding: const EdgeInsets.all(25.0),
+                          child: Container(
+                            padding: EdgeInsets.all(25),
+                            decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(60),
+                                    topRight: Radius.circular(60))),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -43,8 +71,10 @@ class _SignInState extends State<SignIn> {
                                 _buildForm(context, model),
                                 _buildButtons(context, model),
                               ],
-                            )),
-                      ))),
+                            ),
+                          ),
+                        ))),
+              ),
               showLoading(model),
             ],
           ),
@@ -63,7 +93,12 @@ class _SignInState extends State<SignIn> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 19),
-          showText("Log In"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              showText("Login"),
+            ],
+          ),
           const SizedBox(height: 30),
           buildEmailField(model, "Enter your Email"),
           const SizedBox(height: 20),
@@ -71,7 +106,7 @@ class _SignInState extends State<SignIn> {
           const SizedBox(height: 10),
           _buildCheckBox(model, context),
           const SizedBox(height: 30),
-          buildButton(model, context, "Log in"),
+          buildButton(model, context, "Login"),
         ],
       ),
     );
